@@ -61,7 +61,7 @@ def main():
         output2 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 2): {perplexity2:.4f}'
         
         # Save the model
-        save_model(model, optimizer, args.save_path)
+        save_model(model, optimizer, 'datasets')
 
 
         output_file_path = os.path.join(args.save_path, 'output.txt')
