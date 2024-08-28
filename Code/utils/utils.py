@@ -18,8 +18,8 @@ def evaluate_perplexity(model, dataloader, criterion, device,domain_idx):
     return perplexity.item()
 
 def save_model(model, optimizer, path):
-    torch.save(model.state_dict(), path + '/model_state.pth')
-    torch.save(optimizer.state_dict(),path + '/optimizer_state.pth')
+    torch.save(model.state_dict(), path + '/modelCAT_state.pth')
+    torch.save(optimizer.state_dict(),path + '/optimizerCAT_state.pth')
 
 def read_text_files(directory, file_pattern):
     files = sorted([os.path.join(directory, f) for f in os.listdir(directory) if f.startswith(file_pattern)])
