@@ -18,26 +18,30 @@ class CATLayer(nn.Module):
         super(CATLayer, self).__init__()
         self.experts = nn.ModuleList([ExpertLayer(embed_size) for _ in range(num_experts)])
         self.num_experts = num_experts
-        self.attention = nn.MultiheadAttention(embed_size, heads,batch_first = True)
+        self.attention = nn.MultiheadAttention(embed_size, heads, batch_first=True)
 
     def forward(self, x, expert_id):
         # Get outputs from all experts
         expert_outputs = torch.stack([expert(x) for expert in self.experts], dim=0)
         expert_outputs = expert_outputs.permute(1, 2, 0, 3).contiguous()
-        
-        # Create a causal mask to mask future experts
-        seq_len = x.size(1)
-        causal_mask = torch.tril(torch.ones((self.num_experts, self.num_experts), device=x.device)).unsqueeze(0).unsqueeze(0)
-        causal_mask = causal_mask.view(self.num_experts,self.num_experts)
 
-        # Attention mechanism across expert outputs with the causal mask
-        seq = []
-        for i in range(x.size(1)):
-            attn_input = expert_outputs[:,i,:,:].view(x.size(0),self.num_experts,-1)
-            attn_output, _ = self.attention(attn_input, attn_input, attn_input, attn_mask=causal_mask)
-            seq.append(attn_output)
-        expert_output = torch.stack([attn_output[:,expert_id,:] for attn_output in seq],dim = 1)
-        
+        # Combine batch size and sequence length into a single dimension
+        batch_size, seq_len, num_experts, embed_size = expert_outputs.shape
+        attn_input = expert_outputs.view(batch_size * seq_len, num_experts, embed_size)
+
+        # Create a causal mask to mask future experts
+        causal_mask = torch.tril(torch.ones((self.num_experts, self.num_experts), device=x.device))
+
+        # Apply attention mechanism
+        attn_output, _ = self.attention(attn_input, attn_input, attn_input, attn_mask=causal_mask)
+
+        # Reshape back to (batch_size, seq_len, num_experts, embed_size)
+        attn_output = attn_output.view(batch_size, seq_len, num_experts, embed_size)
+
+        # Select the output corresponding to the given expert_id
+        expert_output = attn_output[:, :, expert_id, :]
+
+        # Set requires_grad for only the selected expert
         for i, expert in enumerate(self.experts):
             if i != expert_id:
                 for param in expert.parameters():
@@ -45,7 +49,7 @@ class CATLayer(nn.Module):
             else:
                 for param in expert.parameters():
                     param.requires_grad = True
-        
+
         return expert_output
 
 class CATTransformerBlock(nn.Module):

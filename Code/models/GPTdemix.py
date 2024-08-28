@@ -1,25 +1,6 @@
 import torch
 import torch.nn as nn
 
-class TransformerBlock(nn.Module):
-    def __init__(self, embed_size, heads):
-        super(TransformerBlock, self).__init__()
-        self.attention = nn.MultiheadAttention(embed_size, heads)
-        self.norm1 = nn.LayerNorm(embed_size)
-        self.norm2 = nn.LayerNorm(embed_size)
-        self.ff = nn.Sequential(
-            nn.Linear(embed_size, 4 * embed_size),
-            nn.ReLU(),
-            nn.Linear(4 * embed_size, embed_size)
-        )
-
-    def forward(self, x):
-        attn_output, _ = self.attention(x, x, x)
-        x = self.norm1(attn_output + x)
-        ff_output = self.ff(x)
-        x = self.norm2(ff_output + x)
-        return x
-
 class ExpertLayer(nn.Module):
     def __init__(self, embed_size):
         super(ExpertLayer, self).__init__()
@@ -40,6 +21,14 @@ class DeMIXLayer(nn.Module):
 
     def forward(self, x, expert_id):
         assert 0 <= expert_id < self.num_experts, "Invalid expert id"
+        for i, expert in enumerate(self.experts):
+            if i != expert_id:
+                for param in expert.parameters():
+                    param.requires_grad = False
+            else:
+                for param in expert.parameters():
+                    param.requires_grad = True
+
         return self.experts[expert_id](x)
 
 class DeMIXTransformerBlock(nn.Module):
