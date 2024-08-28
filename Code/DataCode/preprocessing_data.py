@@ -9,7 +9,7 @@ from utils.utils import read_text_files
 def load_and_preprocess_datasets(batch_size):
     seed = 42
     torch.manual_seed(seed)
-    dataset1 = load_dataset("Skylion007/openwebtext", split="train[10:20%]",cache_dir="./cache")
+    dataset1 = load_dataset("Skylion007/openwebtext", split="train[10:30%]",cache_dir="./cache")
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 
@@ -19,7 +19,7 @@ def load_and_preprocess_datasets(batch_size):
     tokenized_datasets1 = dataset1.map(tokenize_function, batched=True,num_proc = 32)
     tokenized_datasets1.set_format(type="torch", columns=["input_ids", "attention_mask"])
 
-    train_size = int(0.9 * len(tokenized_datasets1))
+    train_size = int(0.5 * len(tokenized_datasets1))
     test_size = len(tokenized_datasets1) - train_size
     train_dataset, test_dataset = random_split(tokenized_datasets1, [train_size, test_size], generator=torch.Generator().manual_seed(seed))
     
