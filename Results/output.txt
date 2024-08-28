@@ -2,3 +2,7 @@ Epoch [1/1], Test Perplexity (Domain 1): 551.3481
 Epoch [1/1], Test Perplexity (Domain 2): 1.8389
 Epoch [1/1], Test Perplexity (Domain 1): 516.2556
 Epoch [1/1], Test Perplexity (Domain 2): 1.8393
+Epoch [1/1], Test Perplexity (Domain 1): 819.4125
+Epoch [1/1], Test Perplexity (Domain 2): 1.8293
+Epoch [1/1], Test Perplexity (Domain 1): 515.5477
+Epoch [1/1], Test Perplexity (Domain 2): 1.8384
