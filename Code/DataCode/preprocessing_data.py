@@ -9,8 +9,8 @@ from utils.utils import read_text_files
 def load_and_preprocess_datasets(batch_size):
     seed = 42
     torch.manual_seed(seed)
-    dataset_train = load_dataset("Skylion007/openwebtext", split="train[:15%]", cache_dir="./cache")
-    dataset_test = load_dataset("Skylion007/openwebtext", split="test[:10%]", cache_dir="./cache")
+    dataset_train = load_dataset("Skylion007/openwebtext", split="train[0:15%]", cache_dir="./cache")
+    dataset_test = load_dataset("Skylion007/openwebtext", split="train[90:100%]", cache_dir="./cache")
 
     # Initialize the tokenizer
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
