@@ -71,6 +71,7 @@ def main():
         print(output2)
 
         with open(output_file_path, 'a') as f:
+            f.write(args.model + 'result :- \n')
             f.write(output1 + '\n')
             f.write(output2 + '\n')
 
