@@ -1,4 +1,5 @@
 import torch
+import torch.optim.lr_scheduler as lr_scheduler
 import os
 
 def evaluate_perplexity(model, dataloader, criterion, device,domain_idx):
@@ -30,8 +31,17 @@ def read_text_files(directory, file_pattern):
                 data.append(line.strip())
     return data
 
-def train(model, dataloaders, optimizer, criterion, num_epochs, device, vocab_size, print_every=1000):
+def train(model, dataloaders, optimizer, criterion, num_epochs, device, vocab_size, scheduler_type=None, print_every=1000):
     model.train()
+    
+    # Define the scheduler based on the provided type
+    if scheduler_type == 'step':
+        scheduler = lr_scheduler.StepLR(optimizer, step_size=1000, gamma=0.5)
+    elif scheduler_type == 'cosine':
+        scheduler = lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=1000, T_mult=2)
+    else:
+        scheduler = None
+
     for domain_id, dataloader in enumerate(dataloaders):
         print(f"Training domain :- {domain_id}")
         for epoch in range(num_epochs):
@@ -45,6 +55,10 @@ def train(model, dataloaders, optimizer, criterion, num_epochs, device, vocab_si
                 loss.backward()
                 optimizer.step()
                 
+                # Step the scheduler if it's defined
+                if scheduler:
+                    scheduler.step()
+
                 running_loss += loss.item()
                 
                 if i % print_every == 0:

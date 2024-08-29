@@ -19,6 +19,7 @@ def main():
     parser.add_argument('--epochs', type=int, default=1, help='Number of training epochs')
     parser.add_argument('--lr', type=float, default=1e-4, help='Learning rate for the optimizer')
     parser.add_argument('--save_path', type=str, default='Results', help='Path to save the model')
+    parser.add_argument('--scheduler', type=str, default='step', help='Scheduler to schedule the training')
     parser.add_argument('--gpu',type=int,help = 'The index of the GPU to be used')
 
     args = parser.parse_args()
@@ -52,7 +53,7 @@ def main():
 
     # Training loop
     for epoch in range(args.epochs):
-        train(model, dataloaders, optimizer, criterion, num_epochs=1, device=device, vocab_size=vocab_size)
+        train(model, dataloaders, optimizer, criterion, num_epochs=1, device=device, vocab_size=vocab_size,scheduler_type=args.scheduler)
 
         perplexity1 = evaluate_perplexity(model, test_dataset1, criterion, device, domain_idx=0)
         perplexity2 = evaluate_perplexity(model, test_dataset2, criterion, device, domain_idx=1)
