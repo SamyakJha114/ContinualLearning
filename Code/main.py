@@ -19,7 +19,7 @@ def main():
     parser.add_argument('--epochs', type=int, default=1, help='Number of training epochs')
     parser.add_argument('--lr', type=float, default=1e-4, help='Learning rate for the optimizer')
     parser.add_argument('--save_path', type=str, default='Results', help='Path to save the model')
-    parser.add_argument('--scheduler', type=str, default='step', help='Scheduler to schedule the training')
+    parser.add_argument('--scheduler', type=str, default='none', help='Scheduler to schedule the training')
     parser.add_argument('--gpu',type=int,help = 'The index of the GPU to be used')
 
     args = parser.parse_args()
