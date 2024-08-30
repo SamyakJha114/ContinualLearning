@@ -32,7 +32,7 @@ def main():
     torch.backends.cudnn.benchmark = True
 
     # Load datasets
-    train_dataloader_domain_1, test_dataset1, vocab_size, train_dataloader_domain_2, test_dataset2 = load_and_preprocess_datasets(args.batch_size)
+    train_dataloader_domain_1, test_dataset1, vocab_size, train_dataloader_domain_2,test_dataset2,train_dataloader_domain_3,test_dataset3 = load_and_preprocess_datasets(args.batch_size)
 
     # Initialize the model
     if args.model == 'CAT':
@@ -45,7 +45,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
 
     # Dataloaders for different domains
-    dataloaders = [train_dataloader_domain_1, train_dataloader_domain_2]
+    dataloaders = [train_dataloader_domain_1,train_dataloader_domain_2,train_dataloader_domain_3]
 
     # Device configuration
     device = torch.device(f"cuda:{args.gpu}" if torch.cuda.is_available() else "cpu")
@@ -57,10 +57,12 @@ def main():
 
         perplexity1 = evaluate_perplexity(model, test_dataset1, criterion, device, domain_idx=0)
         perplexity2 = evaluate_perplexity(model, test_dataset2, criterion, device, domain_idx=1)
+        perplexity3 = evaluate_perplexity(model, test_dataset3, criterion, device, domain_idx=2)
 
         output1 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 1): {perplexity1:.4f}'
         output2 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 2): {perplexity2:.4f}'
-        
+        output3 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 2): {perplexity3:.4f}'
+
         # Save the model
         save_model(model, optimizer, 'datasets')
 
@@ -69,11 +71,13 @@ def main():
 
         print(output1)
         print(output2)
+        print(output3)
 
         with open(output_file_path, 'a') as f:
             f.write(args.model + 'result :- \n')
             f.write(output1 + '\n')
             f.write(output2 + '\n')
+            f.write(output3 + '\n')
 
 if __name__ == '__main__':
     main()
