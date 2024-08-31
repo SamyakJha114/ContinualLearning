@@ -10,7 +10,7 @@ def load_and_preprocess_datasets(batch_size):
     seed = 42
     torch.manual_seed(seed)
     dataset1 = load_dataset("krvhrv/Healix-2.8B-Token-Medical-Shot", split="train[0:10%]",cache_dir="./cache",num_proc = 32)
-    dataset2 = load_dataset("Skylion007/openwebtext", split="train[0:10%]",cache_dir="./cache",num_proc = 32)
+    dataset2 = load_dataset("Skylion007/openwebtext", split="train[0:10%]",cache_dir="./cache",num_proc = 32,trust_remote_code=True)
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 
