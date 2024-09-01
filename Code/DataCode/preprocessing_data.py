@@ -11,7 +11,7 @@ def load_and_preprocess_datasets(batch_size):
     seed = 42
     torch.manual_seed(seed)
     medical_files = glob.glob('datasets/Token-Medical-Shot/train-*.parquet')
-    selected_files = random.sample(medical_files, int(0.2 * len(medical_files)))
+    selected_files = random.sample(medical_files, int(len(medical_files)))
     dataset1 = load_dataset('parquet', data_files=selected_files, num_proc=32)
     dataset2 = load_dataset("Skylion007/openwebtext", split="train[0:15%]",cache_dir="./cache",num_proc = 32,trust_remote_code=True)
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
@@ -26,9 +26,11 @@ def load_and_preprocess_datasets(batch_size):
     tokenized_datasets2 = dataset2.map(tokenize_function, batched=True,num_proc = 64)
     tokenized_datasets2.set_format(type="torch", columns=["input_ids", "attention_mask"])
 
+    print(len(tokenized_datasets1))
     train_size = int(0.5 * len(tokenized_datasets1))
     test_size = len(tokenized_datasets1) - train_size
     train_dataset, test_dataset = random_split(tokenized_datasets1, [train_size, test_size], generator=torch.Generator().manual_seed(seed))
+    print(len(train_size),len(test_size))
 
     batch_size = batch_size
     train_dataloader_domain_1 = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
