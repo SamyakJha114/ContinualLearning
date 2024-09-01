@@ -20,7 +20,7 @@ def load_and_preprocess_datasets(batch_size):
     def tokenize_function(examples):
         return tokenizer(examples["text"], padding="max_length", truncation=True, max_length=256)
     
-    tokenized_datasets1 = dataset1.map(tokenize_function, batched=True,num_proc = 64)
+    tokenized_datasets1 = dataset1['train'].map(tokenize_function, batched=True,num_proc = 64)
     tokenized_datasets1.set_format(type="torch", columns=["input_ids", "attention_mask"])
 
     tokenized_datasets2 = dataset2.map(tokenize_function, batched=True,num_proc = 64)
@@ -30,7 +30,7 @@ def load_and_preprocess_datasets(batch_size):
     train_size = int(0.5 * len(tokenized_datasets1))
     test_size = len(tokenized_datasets1) - train_size
     train_dataset, test_dataset = random_split(tokenized_datasets1, [train_size, test_size], generator=torch.Generator().manual_seed(seed))
-    print(len(train_size),len(test_size))
+    print((train_size),(test_size))
 
     batch_size = batch_size
     train_dataloader_domain_1 = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
