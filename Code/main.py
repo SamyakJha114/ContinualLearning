@@ -14,7 +14,7 @@ def main():
     parser.add_argument('--embed_size', type=int, default=256, help='Embedding size for the model')
     parser.add_argument('--heads', type=int, default=8, help='Number of attention heads in the model')
     parser.add_argument('--num_layers', type=int, default=8, help='Number of layers in the model')
-    parser.add_argument('--num_experts', type=int, default=2, help='Number of experts in the DeMIX model')
+    parser.add_argument('--num_experts', type=int, default=3, help='Number of experts in the DeMIX model')
     parser.add_argument('--max_length', type=int, default=256, help='Maximum sequence length')
     parser.add_argument('--epochs', type=int, default=1, help='Number of training epochs')
     parser.add_argument('--lr', type=float, default=1e-4, help='Learning rate for the optimizer')
