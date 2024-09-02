@@ -24,3 +24,11 @@ Epoch [1/1], Test Perplexity (Domain 2): 1.8060
 CATresult :- 
 Epoch [1/1], Test Perplexity (Domain 1): 1652.7863
 Epoch [1/1], Test Perplexity (Domain 2): 1.8183
+CATresult :- 
+Epoch [1/1], Test Perplexity (Domain 1): 2579.2739
+Epoch [1/1], Test Perplexity (Domain 2): 1181.2048
+Epoch [1/1], Test Perplexity (Domain 2): 1.8231
+GPTDeMIXresult :- 
+Epoch [1/1], Test Perplexity (Domain 1): 2592.8062
+Epoch [1/1], Test Perplexity (Domain 2): 1164.0803
+Epoch [1/1], Test Perplexity (Domain 2): 1.8222
