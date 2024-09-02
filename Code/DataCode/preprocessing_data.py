@@ -33,15 +33,15 @@ def load_and_preprocess_datasets(batch_size):
     print((train_size),(test_size))
 
     batch_size = batch_size
-    train_dataloader_domain_3 = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_dataloader_domain_3 = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    train_dataloader_domain_2 = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    test_dataloader_domain_2 = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     
     train_size = int(0.5 * len(tokenized_datasets2))
     test_size = len(tokenized_datasets2) - train_size
     train_dataset, test_dataset = random_split(tokenized_datasets2, [train_size, test_size], generator=torch.Generator().manual_seed(seed))
 
-    train_dataloader_domain_2 = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_dataloader_domain_2 = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    train_dataloader_domain_3 = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    test_dataloader_domain_3 = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     
     directory = "datasets/1-billion-word-language-modeling-benchmark-r13output/training-monolingual.tokenized.shuffled"
     file_pattern = "news.en-"

@@ -61,7 +61,7 @@ def main():
 
         output1 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 1): {perplexity1:.4f}'
         output2 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 2): {perplexity2:.4f}'
-        output3 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 2): {perplexity3:.4f}'
+        output3 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 3): {perplexity3:.4f}'
 
         # Save the model
         save_model(model, optimizer, 'datasets')
