@@ -2,7 +2,7 @@ import torch
 import torch.optim.lr_scheduler as lr_scheduler
 import os
 
-def evaluate_perplexity(model, dataloader, criterion, device,domain_idx):
+def evaluate_perplexity(model_name,model, dataloader, criterion, device,domain_idx):
     model.eval()
     total_loss = 0.0
     total_tokens = 0
@@ -10,7 +10,10 @@ def evaluate_perplexity(model, dataloader, criterion, device,domain_idx):
         for batch in dataloader:
             inputs = batch['input_ids'].to(device)
             labels = inputs.clone()
-            outputs = model(inputs[:, :-1], domain_idx)
+            if model_name == 'CAT':
+                outputs = model(inputs[:, :-1], domain_idx,training = False)
+            else:
+                outputs = model(inputs[:, :-1], domain_idx)
             loss = criterion(outputs.reshape(-1, outputs.size(-1)), labels[:, 1:].reshape(-1))
             total_loss += loss.item() * labels.numel()
             total_tokens += labels.numel()
@@ -18,9 +21,9 @@ def evaluate_perplexity(model, dataloader, criterion, device,domain_idx):
     perplexity = torch.exp(torch.tensor(total_loss / total_tokens))
     return perplexity.item()
 
-def save_model(model, optimizer, path):
-    torch.save(model.state_dict(), path + '/modelCAT_state.pth')
-    torch.save(optimizer.state_dict(),path + '/optimizerCAT_state.pth')
+def save_model(model_name,model, optimizer, path):
+    torch.save(model.state_dict(), path + f'/model{model_name}_state.pth')
+    torch.save(optimizer.state_dict(),path + f'/optimizer{model_name}_state.pth')
 
 def read_text_files(directory, file_pattern):
     files = sorted([os.path.join(directory, f) for f in os.listdir(directory) if f.startswith(file_pattern)])

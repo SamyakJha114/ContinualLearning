@@ -55,16 +55,16 @@ def main():
     for epoch in range(args.epochs):
         train(model, dataloaders, optimizer, criterion, num_epochs=1, device=device, vocab_size=vocab_size,scheduler_type=args.scheduler)
 
-        perplexity1 = evaluate_perplexity(model, test_dataset1, criterion, device, domain_idx=0)
-        perplexity2 = evaluate_perplexity(model, test_dataset2, criterion, device, domain_idx=1)
-        perplexity3 = evaluate_perplexity(model, test_dataset3, criterion, device, domain_idx=2)
+        perplexity1 = evaluate_perplexity(args.model,model, test_dataset1, criterion, device, domain_idx=0)
+        perplexity2 = evaluate_perplexity(args.model,model, test_dataset2, criterion, device, domain_idx=1)
+        perplexity3 = evaluate_perplexity(args.model,model, test_dataset3, criterion, device, domain_idx=2)
 
         output1 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 1): {perplexity1:.4f}'
         output2 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 2): {perplexity2:.4f}'
         output3 = f'Epoch [{epoch+1}/{args.epochs}], Test Perplexity (Domain 3): {perplexity3:.4f}'
 
         # Save the model
-        save_model(model, optimizer, 'datasets')
+        save_model(args.model,model, optimizer, 'datasets')
 
 
         output_file_path = os.path.join(args.save_path, 'output.txt')

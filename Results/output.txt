@@ -40,3 +40,11 @@ GPTDeMIXresult :-
 Epoch [1/1], Test Perplexity (Domain 1): 2.0213
 Epoch [1/1], Test Perplexity (Domain 2): 405.3428
 Epoch [1/1], Test Perplexity (Domain 2): 278.9716
+CATresult :- 
+Epoch [1/1], Test Perplexity (Domain 1): 2.0251
+Epoch [1/1], Test Perplexity (Domain 2): 663.7564
+Epoch [1/1], Test Perplexity (Domain 3): 255.8426
+GPTDeMIXresult :- 
+Epoch [1/1], Test Perplexity (Domain 1): 1.9642
+Epoch [1/1], Test Perplexity (Domain 2): 387.5103
+Epoch [1/1], Test Perplexity (Domain 3): 264.3589

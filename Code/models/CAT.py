@@ -20,28 +20,33 @@ class CATLayer(nn.Module):
         self.num_experts = num_experts
         self.attention = nn.MultiheadAttention(embed_size, heads, batch_first=True)
 
-    def forward(self, x, expert_id):
-        # Get outputs from all experts
-        expert_outputs = torch.stack([expert(x) for expert in self.experts], dim=0)
-        expert_outputs = expert_outputs.permute(1, 2, 0, 3).contiguous()
+    def forward(self, x, expert_id, training=True):
+        if training:
+            # Get outputs from all experts
+            expert_outputs = torch.stack([expert(x) for expert in self.experts], dim=0)
+            expert_outputs = expert_outputs.permute(1, 2, 0, 3).contiguous()
 
-        # Combine batch size and sequence length into a single dimension
-        batch_size, seq_len, num_experts, embed_size = expert_outputs.shape
-        attn_input = expert_outputs.view(batch_size * seq_len, num_experts, embed_size)
+            # Combine batch size and sequence length into a single dimension
+            batch_size, seq_len, num_experts, embed_size = expert_outputs.shape
+            attn_input = expert_outputs.view(batch_size * seq_len, num_experts, embed_size)
 
-        # Create a causal mask to mask future experts
-        causal_mask = torch.tril(torch.ones((self.num_experts, self.num_experts), device=x.device))
+            # Create a causal mask to mask future experts
+            causal_mask = torch.tril(torch.ones((self.num_experts, self.num_experts), device=x.device))
 
-        # Apply attention mechanism
-        attn_output, _ = self.attention(attn_input, attn_input, attn_input, attn_mask=causal_mask)
+            # Apply attention mechanism
+            attn_output, _ = self.attention(attn_input, attn_input, attn_input, attn_mask=causal_mask)
 
-        # Reshape back to (batch_size, seq_len, num_experts, embed_size)
-        attn_output = attn_output.view(batch_size, seq_len, num_experts, embed_size)
+            # Reshape back to (batch_size, seq_len, num_experts, embed_size)
+            attn_output = attn_output.view(batch_size, seq_len, num_experts, embed_size)
 
-        # Select the output corresponding to the given expert_id
-        expert_output = attn_output[:, :, expert_id, :]
+            # Select the output corresponding to the given expert_id
+            expert_output = attn_output[:, :, expert_id, :]
 
-        # Set requires_grad for only the selected expert
+        else:
+            # Directly get the output of the corresponding expert during inference
+            expert_output = self.experts[expert_id](x)
+
+        # Set requires_grad for only the selected expert during training
         for i, expert in enumerate(self.experts):
             if i != expert_id:
                 for param in expert.parameters():
@@ -58,12 +63,12 @@ class CATTransformerBlock(nn.Module):
         self.attention = nn.MultiheadAttention(embed_size, heads)
         self.norm1 = nn.LayerNorm(embed_size)
         self.norm2 = nn.LayerNorm(embed_size)
-        self.cat_layer = CATLayer(num_experts, embed_size,heads)
+        self.cat_layer = CATLayer(num_experts, embed_size, heads)
 
-    def forward(self, x, expert_id):
+    def forward(self, x, expert_id, training=True):
         attn_output, _ = self.attention(x, x, x)
         x = self.norm1(attn_output + x)
-        cat_output = self.cat_layer(x, expert_id)
+        cat_output = self.cat_layer(x, expert_id, training)
         x = self.norm2(cat_output + x)
         return x
 
@@ -78,12 +83,12 @@ class CAT(nn.Module):
         self.ln_f = nn.LayerNorm(embed_size)
         self.head = nn.Linear(embed_size, vocab_size, bias=False)
 
-    def forward(self, x, expert_id):
+    def forward(self, x, expert_id, training=True):
         seq_length = x.size(1)
         positions = torch.arange(0, seq_length, device=x.device).unsqueeze(0)
         x = self.token_embedding(x) + self.position_embedding(positions)
         for layer in self.layers:
-            x = layer(x, expert_id)
+            x = layer(x, expert_id, training)
         x = self.ln_f(x)
         logits = self.head(x)
         return logits
