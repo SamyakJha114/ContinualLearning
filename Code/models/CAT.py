@@ -43,8 +43,24 @@ class CATLayer(nn.Module):
             expert_output = attn_output[:, :, expert_id, :]
 
         else:
-            # Directly get the output of the corresponding expert during inference
-            expert_output = self.experts[expert_id](x)
+            # # Directly get the output of the corresponding expert during inference
+            # expert_output = self.experts[expert_id](x)
+                        # Get outputs from all experts
+            expert_outputs = torch.stack([expert(x) for expert in self.experts], dim=0)
+            expert_outputs = expert_outputs.permute(1, 2, 0, 3).contiguous()
+
+            # Combine batch size and sequence length into a single dimension
+            batch_size, seq_len, num_experts, embed_size = expert_outputs.shape
+            attn_input = expert_outputs.view(batch_size * seq_len, num_experts, embed_size)
+
+            # Apply attention mechanism
+            attn_output, _ = self.attention(attn_input, attn_input, attn_input)
+
+            # Reshape back to (batch_size, seq_len, num_experts, embed_size)
+            attn_output = attn_output.view(batch_size, seq_len, num_experts, embed_size)
+
+            # Select the output corresponding to the given expert_id
+            expert_output = attn_output[:, :, expert_id, :]
 
         # Set requires_grad for only the selected expert during training
         for i, expert in enumerate(self.experts):
