@@ -52,3 +52,7 @@ CATresult :-
 Epoch [1/1], Test Perplexity (Domain 1): 316.7209
 Epoch [1/1], Test Perplexity (Domain 2): 8441.9844
 Epoch [1/1], Test Perplexity (Domain 3): 6694.6240
+CATresult :- 
+Epoch [1/1], Test Perplexity (Domain 1): 2.0139
+Epoch [1/1], Test Perplexity (Domain 2): 701.5735
+Epoch [1/1], Test Perplexity (Domain 3): 255.7617
