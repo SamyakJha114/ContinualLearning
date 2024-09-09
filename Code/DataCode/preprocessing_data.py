@@ -54,7 +54,7 @@ def load_and_preprocess_datasets(batch_size):
     
     directory1 = "datasets/1-billion-word-language-modeling-benchmark-r13output/heldout-monolingual.tokenized.shuffled"
     file_pattern = "news.en-"
-    data = read_text_files(directory, file_pattern)
+    data = read_text_files(directory1, file_pattern)
     data = random.sample(data, int(len(data) * 0.05))
     dataset3 = Dataset.from_dict({"text": data})
     tokenized_datasets3 = dataset3.map(tokenize_function, batched=True,num_proc = 64)
