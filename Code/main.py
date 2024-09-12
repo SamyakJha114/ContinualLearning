@@ -53,7 +53,7 @@ def main():
 
     # Training loop
     for epoch in range(args.epochs):
-        train(model, dataloaders, optimizer, criterion, num_epochs=1, device=device, vocab_size=vocab_size, scheduler_type=args.scheduler)
+        train(model, dataloaders, optimizer, criterion, num_epochs=1, device=device,model_name=args.model, scheduler_type=args.scheduler)
 
         perplexity1 = evaluate_perplexity(args.model, model, test_dataset1, criterion, device, domain_idx=0)
         perplexity2 = evaluate_perplexity(args.model, model, test_dataset2, criterion, device, domain_idx=1)

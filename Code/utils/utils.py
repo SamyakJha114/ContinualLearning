@@ -34,7 +34,7 @@ def read_text_files(directory, file_pattern):
                 data.append(line.strip())
     return data
 
-def train(model, dataloaders, optimizer, criterion, num_epochs, device, vocab_size, scheduler_type=None, print_every=1000):
+def train(model, dataloaders, optimizer, criterion, num_epochs, device, model_name , scheduler_type=None, print_every=1000):
     model.train()
     
     # Define the scheduler based on the provided type
@@ -46,6 +46,9 @@ def train(model, dataloaders, optimizer, criterion, num_epochs, device, vocab_si
         scheduler = None
 
     for domain_id, dataloader in enumerate(dataloaders):
+        if model_name == 'CAT':
+            if domain_id != 0 :
+                model.init_param(domain_id)
         print(f"Training domain :- {domain_id}")
         for epoch in range(num_epochs):
             running_loss = 0.0
