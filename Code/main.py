@@ -10,7 +10,7 @@ from DataCode.preprocessing_data import load_and_preprocess_datasets
 def main():
     parser = argparse.ArgumentParser(description="Train and evaluate GPT-DeMIX model.")
     parser.add_argument('--model', type=str, default='CAT', help='Kind of model for the experiment')
-    parser.add_argument('--batch_size', type=int, default=64, help='Batch size for training and evaluation')
+    parser.add_argument('--batch_size', type=int, default=16, help='Batch size for training and evaluation')
     parser.add_argument('--embed_size', type=int, default=768, help='Embedding size for the model')
     parser.add_argument('--heads', type=int, default=12, help='Number of attention heads in the model')
     parser.add_argument('--num_layers', type=int, default=12, help='Number of layers in the model')
