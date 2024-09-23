@@ -20,7 +20,7 @@ def main():
     parser.add_argument('--lr', type=float, default=5e-5, help='Learning rate for the optimizer')
     parser.add_argument('--save_path', type=str, default='Results', help='Path to save the model')
     parser.add_argument('--scheduler', type=str, default='none', help='Scheduler to schedule the training')
-    parser.add_argument('--gpu', type=int, help='The index of the GPU to be used')
+    # parser.add_argument('--gpu', type=int, help='The index of the GPU to be used')
 
     args = parser.parse_args()
 
@@ -48,8 +48,11 @@ def main():
     dataloaders = [train_dataloader_domain_1, train_dataloader_domain_2, train_dataloader_domain_3]
 
     # Device configuration
-    device = torch.device(f"cuda:{args.gpu}" if torch.cuda.is_available() else "cpu")
-    model.to(device)
+    # device = torch.device(f"cuda:{args.gpu}" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.device_count() > 1:
+        print(f"Using {torch.cuda.device_count()} GPUs for training.")
+        model = torch.nn.DataParallel(model)
+    # model.to(device)
 
     # Training loop
     for epoch in range(args.epochs):

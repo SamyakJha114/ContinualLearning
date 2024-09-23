@@ -1,5 +1,6 @@
 import torch
 import torch.optim.lr_scheduler as lr_scheduler
+from tqdm import tqdm
 import os
 
 def evaluate_perplexity(model_name,model, dataloader, criterion, device,domain_idx):
@@ -52,7 +53,7 @@ def train(model, dataloaders, optimizer, criterion, num_epochs, device, model_na
         print(f"Training domain :- {domain_id}")
         for epoch in range(num_epochs):
             running_loss = 0.0
-            for i, batch in enumerate(dataloader, 1):
+            for i, batch in tqdm(enumerate(dataloader, 1)):
                 inputs = batch['input_ids'].to(device)  
                 labels = inputs.clone()
                 optimizer.zero_grad()
