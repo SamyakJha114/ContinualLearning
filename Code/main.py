@@ -15,7 +15,7 @@ def main():
     parser.add_argument('--heads', type=int, default=12, help='Number of attention heads in the model')
     parser.add_argument('--num_layers', type=int, default=12, help='Number of layers in the model')
     parser.add_argument('--num_domains', type=int, default=3, help='Number of domains in the model')
-    parser.add_argument('--max_length', type=int, default=1024, help='Maximum sequence length')
+    parser.add_argument('--max_length', type=int, default=512, help='Maximum sequence length')
     parser.add_argument('--epochs', type=int, default=1, help='Number of training epochs')
     parser.add_argument('--lr', type=float, default=5e-5, help='Learning rate for the optimizer')
     parser.add_argument('--save_path', type=str, default='Results', help='Path to save the model')
