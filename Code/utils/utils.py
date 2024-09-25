@@ -1,6 +1,6 @@
 import torch
 import torch.optim.lr_scheduler as lr_scheduler
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 import os
 
 def evaluate_perplexity(model_name,model, dataloader, criterion, device,domain_idx):
