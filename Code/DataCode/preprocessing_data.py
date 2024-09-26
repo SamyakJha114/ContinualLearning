@@ -33,8 +33,8 @@ def load_and_preprocess_datasets(batch_size):
     print((train_size),(test_size))
 
     batch_size = batch_size
-    train_dataloader_domain_2 = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_dataloader_domain_2 = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    train_dataloader_domain_1 = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    test_dataloader_domain_1 = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     
     train_size = int(0.5 * len(tokenized_datasets2))
     test_size = len(tokenized_datasets2) - train_size
@@ -50,7 +50,7 @@ def load_and_preprocess_datasets(batch_size):
     dataset3 = Dataset.from_dict({"text": data})
     tokenized_datasets3 = dataset3.map(tokenize_function, batched=True,num_proc = 64)
     tokenized_datasets3.set_format(type="torch", columns=["input_ids", "attention_mask"])
-    train_dataloader_domain_1 = DataLoader(tokenized_datasets3, batch_size=batch_size, shuffle=True)
+    train_dataloader_domain_2 = DataLoader(tokenized_datasets3, batch_size=batch_size, shuffle=True)
     
     directory1 = "datasets/1-billion-word-language-modeling-benchmark-r13output/heldout-monolingual.tokenized.shuffled"
     file_pattern = "news.en-"
@@ -60,6 +60,6 @@ def load_and_preprocess_datasets(batch_size):
     tokenized_datasets3 = dataset3.map(tokenize_function, batched=True,num_proc = 64)
     tokenized_datasets3.set_format(type="torch", columns=["input_ids", "attention_mask"])
 
-    test_dataloader_domain_1 = DataLoader(tokenized_datasets3, batch_size=batch_size, shuffle=True)
+    test_dataloader_domain_2 = DataLoader(tokenized_datasets3, batch_size=batch_size, shuffle=True)
 
     return train_dataloader_domain_1,test_dataloader_domain_1,tokenizer.vocab_size + 1,train_dataloader_domain_2,test_dataloader_domain_2,train_dataloader_domain_3,test_dataloader_domain_3 
