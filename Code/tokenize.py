@@ -18,7 +18,7 @@ def tokenize():
         return tokenizer(examples["text"], padding="max_length", truncation=True, max_length=256)
     tokenized_datasets1 = dataset1['train'].map(tokenize_function, batched=True,num_proc = 64)
     tokenized_datasets1.set_format(type="torch", columns=["input_ids", "attention_mask"])
-    tokenized_datasets1.save_to_disk('/mnt/nas2/samyakjha/datasets')
+    tokenized_datasets1.save_to_disk('datasets/tokenized')
 
 if __name__ == '__main__':
     tokenize()
